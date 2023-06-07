@@ -1,3 +1,4 @@
+import time
 from time import sleep
 from bs4 import BeautifulSoup
 import re
@@ -10,6 +11,7 @@ from requests import PreparedRequest, Response
 from typing import Any, Generator, Optional
 from pydantic import BaseModel, Extra
 import types_1
+
 
 """
 def getInfo(suffix, array, progress):
@@ -47,8 +49,8 @@ def getInfo(suffix, array, progress):
     print("added #"+str(progress)+" successfully: "+title)
 """
 
-def getProduct(link, array, progress):
-    product = fetch_product("", link.split("productdetails/")[1].split('/')[0],progress)
+def getProduct(link, array, progress,completed):
+    product = fetch_product("", link.split("productdetails/")[1].split('/')[0],progress,completed)
 
     title = product.split('"name":"')[1].split('",')[0]
     price = product.split('"price":')[2].split(',')[0]
@@ -93,13 +95,14 @@ def _woolies_session():
     session.get(url='https://www.woolworths.com.au')
     return session
 
-def fetch_product(cls, product_id: str, progress):
+def fetch_product(cls, product_id: str, progress,completed):
         url = f'https://www.woolworths.com.au/api/v3/ui/schemaorg/product/{product_id}'
         response=""
         attempts=0
         while(response==""):
             try:
                 response = _session.get(url=url)
+                completed +=1
             except Exception as e:
                 if(str(e).startswith("401 Client Error")):
                     print("thread "+str(progress)+" failed with 401 error. aborting") 
@@ -119,7 +122,8 @@ def fetch_product(cls, product_id: str, progress):
 
 
 if __name__ == "__main__":
-
+    start = time.time()
+    numThreads=20
     #_session = _woolies_session()
     attempts = 0
     while(True):
@@ -148,19 +152,20 @@ if __name__ == "__main__":
     o=open("woolworthsProducts.txt","w")
     productListings=[]
     progress=0
+    completed=0
     threads = []
 
     for line in f:
-        if(progress==1000):break
+        #if(progress==1000):break
         progress+=1
 
         #getProduct(line, productListings)
         
-        if (len(threads)%100==0):
+        if (len(threads)%numThreads==0):
             for thread in threads:
                 thread.join()
         print("started thread #"+str(progress)+": "+line)
-        T = threading.Thread(target=getProduct, args=(line, productListings, progress))
+        T = threading.Thread(target=getProduct, args=(line, productListings, progress,completed))
         threads.append(T)
         T.start()    
 
@@ -174,6 +179,34 @@ if __name__ == "__main__":
     f.close()
     o.close()
     print("job done")
+    end=time.time()
+    totalTime=end-start
+    print("process finished using "+str(numThreads)+" threads.\ntime taken: "+str(totalTime)+"\nsuccessfull entries: "+str(completed)+"/1000")
 
     #print(image)
+
+"""process finished using100threads.
+time taken: 345.606422662735
+successfull entries: 9914/1000, 71 timeout, 86 failed"""
+
+"""process finished using 10 threads.
+time taken: 224.917982339859
+successfull entries: 9985/1000, 0 timeout, 15 failed"""
+
+"""process finished using 50 threads. bad run?
+time taken: 660.2435896396637
+successfull entries: 788/1000, 197 timeout, 212 failed"""
     
+"""process finished using 50 threads.
+time taken: 666.2105619907379
+successfull entries: 0/1000"""
+
+"""process finished using 20 threads.
+time taken: 60.5791699886322
+successfull entries: 0/1000 0 timeout"""
+
+"""process finished using 30 threads.
+time taken: 267.95836901664734
+successfull entries: 0/1000 4 timeout"""
+
+"""change timing to 1 second wait each 10 entries, wait for 1 minuite before retrying"""
