@@ -10,44 +10,6 @@ from requests.adapters import HTTPAdapter, Retry
 from requests import PreparedRequest, Response
 from typing import Any, Generator, Optional
 from pydantic import BaseModel, Extra
-import types_1
-
-
-"""
-def getInfo(suffix, array, progress):
-    result = ""
-    line=""#
-    while(result==""):
-        try:
-            result = requests.get(baseUrl+suffix.rstrip())
-        except:
-            print("thread "+progress+" encountered an error, trying again in 10 seconds")
-            sleep(10)
-
-    productPage = BeautifulSoup(result.text, 'html.parser')
-
-    try:
-        title = productPage.find("h1").contents[0]
-    except:
-        array+=[""+line+", $0.00", "xxx", "404"]
-        print("failed to add #"+str(progress)+": "+line)
-        return
-    try:
-        price = productPage.find(attrs={"data-testid": "pricing"}).contents[0]
-    except:
-        price = "currently unavailable"
-    try:
-        pricingMethod = productPage.find(attrs={"class": "price__calculation_method"}).contents[0]
-    except:
-        pricingMethod = price+" per each"
-    try:
-        image = productPage.find_all("img")[2].get('src')
-    except:
-        image = "404"
-
-    array+=[""+title+", "+price+", "+pricingMethod+", "+image+""]
-    print("added #"+str(progress)+" successfully: "+title)
-"""
 
 def getProduct(link, array, progress,completed):
     product = fetch_product("", link.split("productdetails/")[1].split('/')[0],progress,completed)
@@ -107,8 +69,8 @@ def fetch_product(cls, product_id: str, progress,completed):
                 if(str(e).startswith("401 Client Error")):
                     print("thread "+str(progress)+" failed with 401 error. aborting") 
                     return '"name":"failed:'+product_id+'","price":0,"price":0,"image":"404","sku":"404"'
-                print("thread "+str(progress)+" encountered an error: "+str(e)+", trying again in 10 seconds")
-                sleep(10)
+                print("thread "+str(progress)+" encountered an error: "+str(e)+", trying again in 1 minuite")
+                sleep(60)
                 attempts+=1
             else:
                 break
@@ -162,8 +124,9 @@ if __name__ == "__main__":
         #getProduct(line, productListings)
         
         if (len(threads)%numThreads==0):
-            for thread in threads:
-                thread.join()
+            sleep(1)
+            #for thread in threads:
+             #   thread.join()
         print("started thread #"+str(progress)+": "+line)
         T = threading.Thread(target=getProduct, args=(line, productListings, progress,completed))
         threads.append(T)
@@ -209,4 +172,7 @@ successfull entries: 0/1000 0 timeout"""
 time taken: 267.95836901664734
 successfull entries: 0/1000 4 timeout"""
 
-"""change timing to 1 second wait each 10 entries, wait for 1 minuite before retrying"""
+"""full job 20 threads old mode, 1592 failed, 961 timeout, 631 unauthorised (nicotine)"""
+
+"""change timing to 1 second wait each 10 entries, wait for 1 minuite before retrying
+0 TIMEOUT! 1/10 of the time!"""
