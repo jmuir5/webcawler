@@ -85,5 +85,5 @@ if __name__ == "__main__":
     print("job done")
     end=time.time()
     totalTime=end-start
-    print("process finished using "+str(numThreads)+" threads.\ntime taken: "+str(totalTime))
+    print("process finished using unlimited threads.\ntime taken: "+str(totalTime))
 
