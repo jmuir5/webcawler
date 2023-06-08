@@ -9,9 +9,9 @@ def getInfo(suffix, array, progress):
     result = ""
     while(result==""):
         try:
-            result = requests.get(baseUrl+suffix.rstrip())
-        except:
-            print("thread "+str(progress)+" encountered an error, trying again in 10 seconds")
+            result = requests.get(baseUrl+suffix.strip())
+        except Exception as e:
+            print("thread "+str(progress)+" encountered an error: "+str(e)+", trying again in 10 seconds")
             sleep(10)
 
     productPage = BeautifulSoup(result.text, 'html.parser')
