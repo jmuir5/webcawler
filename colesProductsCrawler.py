@@ -35,7 +35,7 @@ def getInfo(suffix, array, progress):
     except:
         image = "404"
 
-    array+=[""+title+", "+price+", "+pricingMethod+", "+image+""]
+    array+=[title+","+price+","+pricingMethod+","+image]
     print("added #"+str(progress)+" successfully: "+title)
 
 
