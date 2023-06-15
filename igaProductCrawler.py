@@ -38,7 +38,7 @@ def getProduct(product_id, array, progress):
         image = response.split('"default":"')[1].split('",')[0]
         sku = response.split('"sku":"')[1].split('",')[0]
         print("added #"+str(progress)+" successfully: "+title)
-        array+=[title+","+price+","+unitprice+","+image+","+sku]
+        array+=[title+";"+price+";"+unitprice+";"+image+";"+sku]
     except Exception as e:
         errorCode = response.split('"statusCode":')[1].split(',')[0]
         sleep(10)
@@ -78,8 +78,11 @@ if __name__ == "__main__":
     print("all threads completed, writing to file")
 
     o=open("igaProducts.txt","w")
-    for line in productListings:
-        o.write(str(line)+"\n")
+    for index, line in enumerate(productListings):
+        
+        o.write(str(line))
+        if (index!=len(productListings)-1):
+            o.write("\n")
     f.close()
     o.close()
     print("job done")
