@@ -40,7 +40,7 @@ def getInfo(line, array, progress):
     except:
         image = "404"
 
-    array+=[""+title+", "+price+", "+pricingMethod+", "+image+""]
+    array+=[title+","+price+","+pricingMethod+","+image+",-1"]
     print("added #"+str(progress)+" successfully: "+title)
 
 
@@ -67,8 +67,11 @@ if __name__ == "__main__":
 
     print("all threads completed, writing to file")
 
-    for line in productListings:
-        o.write(str(line)+"\n")
+    for index, line in enumerate(productListings):
+        
+        o.write(str(line))
+        if (index!=len(productListings)-1):
+            o.write("\n")
     f.close()
     o.close()
     print("job done")

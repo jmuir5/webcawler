@@ -15,13 +15,15 @@ def getProduct(link, array, progress,completed):
     product = fetch_product("", link.split("productdetails/")[1].split('/')[0],progress,completed)
 
     title = product.split('"name":"')[1].split('",')[0]
+    if("," in title):
+        title=title.replace(",", " ")
     price = product.split('"price":')[2].split(',')[0]
     image = product.split('"image":"')[1].split('",')[0]
     sku = product.split('"sku":"')[1].split('",')[0]
 
     print("added #"+str(progress)+" successfully: "+title)
 
-    array+=[title+", "+price+", "+image+", "+sku]
+    array+=[title+","+price+","+price+"per each,"+image+","+sku]
      
 
 class DefaultTimeoutAdapter(HTTPAdapter):
@@ -68,7 +70,7 @@ def fetch_product(cls, product_id: str, progress,completed):
             except Exception as e:
                 if(str(e).startswith("401 Client Error")):
                     print("thread "+str(progress)+" failed with 401 error. aborting") 
-                    return '"name":"failed:'+product_id+'","price":0,"price":0,"image":"404","sku":"404"'
+                    return '"name":"failed:'+product_id+'","price":0,"price":0,"image":"404","sku":"404",'
                 print("thread "+str(progress)+" encountered an error: "+str(e)+", trying again in 1 minuite")
                 sleep(60)
                 attempts+=1
@@ -77,7 +79,7 @@ def fetch_product(cls, product_id: str, progress,completed):
             finally:
                 if(attempts==10):
                    print("thread "+str(progress)+" failed 10 times. aborting thread") 
-                   return '"name":"failed","price":0,"price":0,"image":"404","sku":"404"'
+                   return '"name":"failed","price":0,"price":0,"image":"404","sku":"404",'
         
         return response.text
 
@@ -137,8 +139,11 @@ if __name__ == "__main__":
     
     print("all threads completed, writing to file")
 
-    for line in productListings:
-        o.write(str(line)+"\n")
+    for index, line in enumerate(productListings):
+        
+        o.write(str(line))
+        if (index!=len(productListings)-1):
+            o.write("\n")
     f.close()
     o.close()
     print("job done")

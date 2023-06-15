@@ -34,8 +34,12 @@ def getInfo(suffix, array, progress):
         image = productPage.find_all("img")[2].get('src')
     except:
         image = "404"
+    try:
+        sku = productPage.find(attrs={"data-testid": "product-code"}).contents[1]
+    except:
+        sku = "currently unavailable"
 
-    array+=[""+title+", "+price+", "+pricingMethod+", "+image+""]
+    array+=[""+title+","+price+","+pricingMethod+","+image+","+sku]
     print("added #"+str(progress)+" successfully: "+title)
 
 
@@ -63,8 +67,11 @@ if __name__ == "__main__":
 
     print("all threads completed, writing to file")
 
-    for line in productListings:
-        o.write(str(line)+"\n")
+    for index, line in enumerate(productListings):
+        
+        o.write(str(line))
+        if (index!=len(productListings)-1):
+            o.write("\n")
     f.close()
     o.close()
     print("job done")
