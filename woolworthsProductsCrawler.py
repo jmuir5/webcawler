@@ -19,14 +19,11 @@ def getProduct(link, array, progress,completed):
         title=title.replace(",", " ")
     price = product.split('"price":')[2].split(',')[0]
     image = product.split('"image":"')[1].split('",')[0]
-    
     sku = product.split('"sku":"')[1].split('",')[0]
 
     print("added #"+str(progress)+" successfully: "+title)
 
-
     array+=[title+","+price+","+price+"per each,"+image+","+sku]
-
      
 
 class DefaultTimeoutAdapter(HTTPAdapter):
@@ -106,7 +103,15 @@ if __name__ == "__main__":
             if(attempts == 10):
                 print("session failed 10 times, aborting")
                 exit()
+    #title, price, price per???, image, sku
 
+    #product = fetch_product("", "129651")
+    #title = product.split('"name":"')[1].split('",')[0]
+    #price = product.split('"price":')[2].split(',')[0]
+    #image = product.split('"image":"')[1].split('",')[0]
+    #sku = product.split('"sku":"')[1].split('",')[0]
+    #print(title+", "+price+", "+image+", "+sku)
+    
     f=open("woolworthsLinks.txt", "r")
     o=open("woolworthsProducts.txt","w")
     productListings=[]
@@ -115,7 +120,7 @@ if __name__ == "__main__":
     threads = []
 
     for line in f:
-        if(progress==10):break
+        #if(progress==1000):break
         progress+=1
 
         #getProduct(line, productListings)
