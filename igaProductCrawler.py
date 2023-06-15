@@ -21,7 +21,7 @@ def getProduct(product_id, array, progress):
         except Exception as e:
             if(str(e).startswith("401 Client Error")):
                 print("thread "+str(progress)+" failed with 401 error. aborting") 
-                response = '"name":"failed:'+product_id+'","price":0,"price":0,"image":"404","sku":"404"'
+                response = '"name":"failed:'+product_id+'","price":0,"price":0,"image":"404"'
             print("thread "+str(progress)+" encountered an error: "+str(e)+", trying again in 1 minuite")
             sleep(60)
             attempts+=1
@@ -30,13 +30,12 @@ def getProduct(product_id, array, progress):
         finally:
             if(attempts==10):
                 print("thread "+str(progress)+" failed 10 times. aborting thread") 
-                response = '"name":"failed","price":0,"price":0,"image":"404","sku":"404"'
+                response = '"name":"failed","price":0,"price":0,"image":"404"'
     try:   
         title = response.split('"name":"')[1].split('",')[0]
         price = response.split('"price":')[1].split(',')[0]
         unitprice = response.split('"unitPrice":')[1].split(',')[0]
         image = response.split('"default":"')[1].split('",')[0]
-        sku = response.split('"sku":"')[1].split('",')[0]
         print("added #"+str(progress)+" successfully: "+title)
         array+=[title+";"+price+";"+unitprice+";"+image+";"+sku]
     except Exception as e:
