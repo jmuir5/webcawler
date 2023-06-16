@@ -36,6 +36,7 @@ def getProduct(product_id, array, progress):
         price = response.split('"price":')[1].split(',')[0]
         unitprice = response.split('"unitPrice":')[1].split(',')[0]
         image = response.split('"default":"')[1].split('",')[0]
+        sku = response.split('"sku":"')[1].split('",')[0]
         print("added #"+str(progress)+" successfully: "+title)
         array+=[title+";"+price+";"+unitprice+";"+image+";"+sku]
     except Exception as e:

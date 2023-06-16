@@ -53,6 +53,7 @@ if __name__ == "__main__":
     threads = []
 
     for line in f:
+        if(progress==10):break
         numThreads = 10
         if (len(threads)%numThreads==0):
             sleep(1)
