@@ -18,9 +18,9 @@ def getInfo(suffix, array, progress):
 
     try:
         title = productPage.find("h1").contents[0]
-    except:
-        array+=[""+line+", $0.00", "xxx", "404"]
-        print("failed to add #"+str(progress)+": "+line)
+    except Exception as e:
+        #array+=[""+line+", $0.00", "xxx", "404"]
+        print("failed to add #"+str(progress)+": "+line+", exception:"+str(e))
         return
     try:
         price = productPage.find(attrs={"data-testid": "pricing"}).contents[0]
@@ -53,9 +53,9 @@ if __name__ == "__main__":
     threads = []
 
     for line in f:
-        if (len(threads)%100==0):
-            for thread in threads:
-                thread.join()
+        numThreads = 10
+        if (len(threads)%numThreads==0):
+            sleep(1)
         progress+=1
         print("started thread #"+str(progress)+": "+line)
         T = threading.Thread(target=getInfo, args=(line, productListings, progress))
