@@ -11,8 +11,7 @@ result = requests.get(baseUrl+suffix.strip())
 
 productPage = BeautifulSoup(result.text, 'html.parser')
 
-print(productPage)
-print(productPage.find("h1"))
-print(productPage.find("h1").contents)
-print(productPage.find("h1").contents[0])
+print(productPage.find(attrs={"data-testid": "product-code"}))
+print(productPage.find(attrs={"data-testid": "product-code"}).contents)
+print(productPage.find(attrs={"data-testid": "product-code"}).contents[1])
 

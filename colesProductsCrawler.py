@@ -35,7 +35,7 @@ def getInfo(suffix, array, progress):
     except:
         image = "404"
     try:
-        sku = productPage.find(attrs={"data-testid": "product-code"}).contents[1]
+        sku = productPage.find(attrs={"data-testid": "product-code"}).contents[3]
     except:
         sku = "currently unavailable"
 
